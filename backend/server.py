@@ -16,4 +16,5 @@ for route in ROUTES:
 if __name__ == '__main__':
     initialize_app()
     with make_server('', 8000, app) as httpd:
+        print(f"Server running on localhost:8000")
         httpd.serve_forever()

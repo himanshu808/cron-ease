@@ -1,3 +1,4 @@
 CRONJOB = {
-    "job": ""
+    "container": "",
+    "jobs": []
 }

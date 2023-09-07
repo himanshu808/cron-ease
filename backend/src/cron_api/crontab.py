@@ -10,18 +10,25 @@ class CronTab:
         self.cronjobs: list[CronJob] = []
         self.get_cronjobs()
 
-    def get_cronjobs(self):
+    def get_cronjobs(self) -> None:
         if not is_container_running(self.container_id):
             return
         exit_code, output = exec_cmd(self.container_id, LIST_CRONTAB)
         output = output.decode("utf-8")
         if exit_code == 1:
-            if output.strip().startswith("no crontab for"):
+            if output.strip().lower().startswith("no crontab for"):
                 return
             raise Exception("error while fetching cronjobs!")
 
         for cronjob in output.splitlines():
-            self.cronjobs.append(CronJob.create_cronjob(cronjob))
+            self.cronjobs.append(CronJob.get_cronjob_obj(cronjob))
+
+    def get_cronjobs_as_list(self) -> list[str]:
+        crons: list[str] = []
+
+        for cron in self.cronjobs:
+            crons.append(repr(cron))
+        return crons
 
     def add_cronjob(self):
         pass

@@ -5,3 +5,5 @@ MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", 
 DAYS = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"]
 
 LIST_CRONTAB = "crontab -l"
+
+APPEND_CRONJOB_CMD = '(crontab -l 2>/dev/null ; echo "{cronjob}") | crontab -'

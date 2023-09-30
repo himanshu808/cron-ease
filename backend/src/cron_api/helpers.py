@@ -243,3 +243,7 @@ def parse_cmd_and_comments(cronjob: str) -> tuple[str, Optional[str]]:
     if len(temp) != 2:
         return temp[0].strip(WHITESPACE), None
     return temp[0].strip(WHITESPACE), temp[1].strip(WHITESPACE)
+
+
+def create_bash_cmd(cmd: str) -> list[str]:
+    return ['/bin/bash', '-c', cmd]

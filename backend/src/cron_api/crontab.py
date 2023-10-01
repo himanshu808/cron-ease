@@ -52,6 +52,23 @@ class CronTab:
             return False
         return True
 
+    def delete_cronjob(self, minute: str, hour: str, day_of_month: str, month: str, day_of_week: str, cmd: str,
+                    is_commented: bool = False, comments: Optional[str] = None):
+        cronjob = CronJob(minute=minute, hour=hour, day_of_month=day_of_month, month=month, day_of_week=day_of_week,
+                          cmd=cmd, is_commented=is_commented, comments=comments)
+        try:
+            cronjob = CronJob.get_cronjob_obj(repr(cronjob))
+        except Exception as e:
+            print(e)
+            return False
+
+        delete_cmd = DELETE_CRONJOB_CMD.format(cronjob=repr(cronjob))
+        exit_code, output = exec_cmd(self.container_id, create_bash_cmd(delete_cmd))
+        if exit_code:
+            print(f"error: {output}")
+            return False
+        return True
+
     def delete_all_cronjobs(self):
         pass
 

@@ -10,7 +10,10 @@ import falcon
 app = falcon.App(middleware=[JSONMiddleware()], independent_middleware=True)
 
 for route in ROUTES:
-    app.add_route(route[0], route[1]())
+    if len(route) == 2:
+        app.add_route(route[0], route[1]())
+    else:
+        app.add_route(route[0], route[1](), suffix=route[2])
 
 
 if __name__ == '__main__':

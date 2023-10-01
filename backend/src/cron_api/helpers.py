@@ -233,7 +233,7 @@ def parse_day_of_week(cronjob: str) -> tuple[str, str]:
         if not validate_day_of_week(d):
             raise Exception(f"invalid day of week: {d} in {cronjob}!")
 
-    return day.strip(WHITESPACE), temp[5].strip(WHITESPACE)
+    return day.strip(WHITESPACE), temp[5]
 
 
 def parse_cmd_and_comments(cronjob: str) -> tuple[str, Optional[str]]:
@@ -241,8 +241,8 @@ def parse_cmd_and_comments(cronjob: str) -> tuple[str, Optional[str]]:
 
     temp = cronjob.split("#", 1)
     if len(temp) != 2:
-        return temp[0].strip(WHITESPACE), None
-    return temp[0].strip(WHITESPACE), temp[1].strip(WHITESPACE)
+        return temp[0], None
+    return temp[0], temp[1]
 
 
 def create_bash_cmd(cmd: str) -> list[str]:

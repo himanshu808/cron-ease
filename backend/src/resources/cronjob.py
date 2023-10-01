@@ -78,16 +78,29 @@ class CronJobResource:
         else:
             resp.body = "cronjob deleted successfully"
             resp.status = falcon.HTTP_200
-        container_obj = ContainerResource.get_container_by_name(container)
+
+    def on_put_toggle(self, req, resp, c_id, job_id):
+        container_obj = ContainerResource.get_container_by_name(c_id)
         crontab = crontabs.get_container_crontab(container_obj.short_id)
-        successful = crontab.delete_cronjob(minute=minute, hour=hour, day_of_month=day_of_month, month=month,
-                                            day_of_week=day_of_week, cmd=cmd, is_commented=is_commented,
-                                            comments=comments)
+
+        cronjob_id = job_id - 1  # 0-indexing
+
+        if cronjob_id >= len(crontab.cronjobs):
+            resp.body = "cronjob not found"
+            resp.status = falcon.HTTP_422
+            return
+
+        successful, is_commented = crontab.toggle_cronjob(cronjob_id)
+
+        if is_commented:
+            result_state = "uncomment"
+        else:
+            result_state = "comment"
 
         if not successful:
-            resp.body = "failed to delete cronjob"
+            resp.body = f"failed to {result_state} cronjob"
             resp.status = falcon.HTTP_500
         else:
-            resp.body = "cronjob deleted successfully"
+            resp.body = f"cronjob {result_state}ed successfully"
             resp.status = falcon.HTTP_200
 

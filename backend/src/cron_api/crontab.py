@@ -3,6 +3,8 @@ from . import is_container_running, exec_cmd
 from .constants import *
 from typing import Optional
 from .helpers import create_bash_cmd
+from copy import deepcopy
+import re
 
 
 class CronTab:
@@ -67,5 +69,17 @@ class CronTab:
         self.cronjobs.pop(job_id)
         return True
 
+    def toggle_cronjob(self, job_id: int):
+        original_cronjob = self.cronjobs[job_id]
+        updated_cronjob = deepcopy(original_cronjob)
+        updated_cronjob.is_commented = not updated_cronjob.is_commented
 
+        toggle_cmd = UPDATE_CRONJOB_CMD.format(line_no=job_id+1,
+                                               original_cronjob=re.escape(repr(original_cronjob)),
+                                               updated_cronjob=repr(updated_cronjob))
+        exit_code, output = exec_cmd(self.container_id, create_bash_cmd(toggle_cmd))
+        if exit_code:
+            print(f"error: {output}")
+            return False, original_cronjob.is_commented
+        return True, original_cronjob.is_commented
 

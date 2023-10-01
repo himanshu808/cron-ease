@@ -41,7 +41,7 @@ class CronJob:
     def __repr__(self) -> str:
         repr_str = f"{self.minute} {self.hour} {self.day_of_month} {self.month} {self.day_of_week} {self.cmd}"
         if self.comments:
-            repr_str += f"#{self.comments}"
+            repr_str += f" # {self.comments}"
         if self.is_commented:
             repr_str = "# " + repr_str
 
